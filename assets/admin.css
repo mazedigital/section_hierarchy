@@ -1,0 +1,17 @@
+/* Admin */
+
+a.toggle { display:inline-block; margin:0 5px; padding:0; width:16px; height:16px; vertical-align:middle; }
+a.toggle.open { background:url('images/toggle_minus.png') no-repeat; }
+a.toggle.closed { background:url('images/toggle_plus.png') no-repeat; }
+
+#publish-pages-table td.depth-0 { padding-left:10px; }
+#publish-pages-table td.depth-1 { padding-left:30px; }
+#publish-pages-table td.depth-2 { padding-left:60px; }
+
+#publish-pages-table span.mdash {
+	background:url("images/mdash.png") no-repeat scroll left center;
+	width:16px;
+	display:inline-block;
+	margin:0 2px 0 8px;
+	height:10px;
+}
