@@ -31,6 +31,7 @@ jQuery(document).ready(function () {
 					var btn = jQuery('<img />')
 						.attr('src', Symphony.Context.get('root')+'/extensions/section_hierarchy/assets/images/copy_slug.png')
 						.attr('lang', lang)
+						.attr('class', 'sym_url_handle')
 						.css({'cursor':'pointer'})
 						.click(function(){
 							var input = jQuery(this).prev();
