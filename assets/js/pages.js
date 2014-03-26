@@ -102,7 +102,7 @@ jQuery(document).ready(function () {
 				jrow
 					.addClass('highlight')
 					.insertAfter( jQuery(table).find('tr#'+parent_id) );
-				// alert('Page "'+getInner(cell)+'" has been automatically moved, please confirm its positon.');
+				alert('Page "'+getInner(cell)+'" has been automatically moved, please confirm its positon by reordering some items.');
 				jQuery('html, body').animate({scrollTop: jrow.offset().top - 100}, 500);
 			}
 		
