@@ -9,6 +9,7 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="0.5" date="2015-02-24" min="2.5"/>
 		<release version="0.2" date="2014-03-26" min="2.4" max="2.4.x" />
 		<release version="0.1" date="2013-01-28" min="2.3" max="2.3.x" />
 	</releases>

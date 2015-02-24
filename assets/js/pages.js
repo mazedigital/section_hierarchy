@@ -4,9 +4,22 @@
  */
 jQuery(document).ready(function () {
 	try {
-	
-		// Do not load when we are viewing a page filter
-		if (window.location.href.indexOf('?filter') !== -1)
+
+		filters = Symphony.Context.get('env').filters;
+
+		if (typeof(Symphony.Hierarchy.filters) !== 'undefined'){
+			//filter will run if the two filters have matching keys. Not actual values at least for now
+			currentKeys = Object.keys(filters);
+			supportedKeys = Object.keys(Symphony.Hierarchy.filters);
+
+			if (!(jQuery(currentKeys).not(supportedKeys).length === 0 && jQuery(supportedKeys).not(currentKeys).length === 0))
+				return;
+
+		} else if (Object.keys(filters).length > 0)
+			return;
+
+		//if parent values are all null do not try to parse as there are no elements to indent
+		if (jQuery('.field-' + Symphony.Hierarchy.parent).not('.inactive').length == 0)
 			return;
 	
 		// Function for scraping the inside content of a cell (possibly containing a child node)
@@ -28,18 +41,11 @@ jQuery(document).ready(function () {
 		var table = jQuery('table')[0];
 		jQuery(table).attr('id', 'publish-pages-table');
 		
-		// Get column indexes of: "Menu title", "Parent page", "URL Handle"
+		// Get column indexes of: "Menu title", "Parent page"
 		var header_row = table.rows[0];
 		var cols = new Array();
-		cols['parent'] = -1;
-		cols['title'] = -1;
-		cols['handle'] = -1;
-		for (var c = 0; c < header_row.cells.length; c++) {
-			var cell = header_row.cells[c];
-			if ( getInner(cell).toLowerCase() == 'parent' ) { cols['parent'] = c; }
-			else if ( getInner(cell).toLowerCase() == 'title' ) { cols['title'] = c; }
-			else if ( getInner(cell).toLowerCase() == 'url handle' ) { cols['handle'] = c; }
-		}
+		cols['parent'] = jQuery(header_row.cells).filter('#field-' + Symphony.Hierarchy.parent).index();
+		cols['title'] = jQuery(header_row.cells).filter('#field-' + Symphony.Hierarchy.title).index();
 		
 		// Make sure all columns found
 		if (jQuery.inArray(cols, -1) !== -1)
@@ -72,7 +78,7 @@ jQuery(document).ready(function () {
 			var depth = 0;
 			var parent_id = parents[page_id];
 			while (parent_id != 0 && depth < 3) {
-			console.log(depth);
+				console.log(depth);
 				depth++;
 				parent_id = parents[parent_id];
 			}
@@ -157,7 +163,6 @@ jQuery(document).ready(function () {
 			});
 		}
 		
-		
 		//
 		// Loop 3: Do all remaining processing
 		// 	- Highlight duplicate URL Handles
@@ -170,20 +175,6 @@ jQuery(document).ready(function () {
 			var cell = row.cells[cols['title']];
 			var page_id = parseInt(jQuery(row).attr('id'));
 			var parent_id = parents[page_id];
-			var handle = getInner(row.cells[cols['handle']]);
-
-			
-			// If a link to another page, mark accordingly
-			if (handle.match(/#page:\d+/)) {
-				jQuery(row).addClass('virtual-link');
-				jQuery(cell).append('<span class="icon">&nbsp;</span>');
-			}
-			
-			// Check if URL Handle already exists
-			if (handle_map.indexOf(handle) > -1) {
-				jQuery(row.cells[cols['handle']]).addClass('duplicate-url-handle');
-			}
-			handle_map.push(handle);
 			
 			// If it has no kids just put a spacer...
 			if (getChildren(page_id).length <= 0) {
@@ -206,7 +197,7 @@ jQuery(document).ready(function () {
 			jQuery(cell).prepend(toggler);
 			
 		}
-		
+				
 		// Finally add an overall show/hide button
 		jQuery('<button />')
 			.addClass('toggle')

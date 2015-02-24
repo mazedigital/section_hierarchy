@@ -2,16 +2,16 @@
 
 class extension_section_hierarchy extends Extension {
 
-    
-     public function getSubscribedDelegates() {
-        return array(
+	
+	public function getSubscribedDelegates() {
+		return array(
 			array(
 				'page' => '/backend/',
 				'delegate' => 'InitialiseAdminPageHead',
 				'callback' => 'initializeAdmin',
 			),
-        );
-    }
+		);
+	}
 	
 	/**
 	 * Some admin customisations
@@ -21,22 +21,46 @@ class extension_section_hierarchy extends Extension {
 
 		$page = Administration::instance()->Page;
 		$assets_path = URL . '/extensions/section_hierarchy/assets';
+
+		$hierarchy = Symphony::Configuration()->get('section_hierarchy');
+		$sections = array_keys($hierarchy);
 				
 		// Only load on /publish/static-pages/ [this should be a variable]
-		if ($page->_context['section_handle'] == 'pages' && $page->_context['page'] == 'index') {
+		if ( in_array($page->_context['section_handle'] , $sections) && $page->_context['page'] == 'index') {
+
+			Administration::instance()->Page->addElementToHead(
+				new XMLElement('script', 'Symphony.Hierarchy='.json_encode($hierarchy[$page->_context['section_handle']]), array(
+					'type' => 'text/javascript'
+				))
+			);
+
 			$page->addStylesheetToHead($assets_path . '/admin.css', 'all', $LOAD_NUMBER++);
 			$page->addScriptToHead($assets_path . '/js/pages.js', $LOAD_NUMBER++);
 			// Effectively disable backend pagination for this section
 			// Symphony::Configuration()->set("pagination_maximum_rows", $LOAD_NUMBER++, "symphony");
 		}
-		// Only load on /publish/.../new/ OR /publish/.../edit/
-		if (in_array($page->_context['page'], array('new', 'edit'))) {
-			$page->addScriptToHead($assets_path . '/js/publish.js', $LOAD_NUMBER++);
-		}
 		
 	}
 		
-	//todo add setting to choose the section & the title.
+	//todo add preferences page to add the settings for now use the below for a guide on what needs to be added within the config
+
+	/*
+		###### SECTION_HIERARCHY ######
+		'section_hierarchy' => array(
+			'sections' => array(
+					'title' => '7',
+					'parent' => '17',
+					'filters' => array(
+							'type' => 'Article Section'
+						)
+				),
+			'pages' => array(
+					'title' => '74',
+					'parent' => '77'
+				)
+		),
+		########
+	*/
   
 }  
 ?>
