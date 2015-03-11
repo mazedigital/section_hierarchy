@@ -29,7 +29,7 @@ class extension_section_hierarchy extends Extension {
 		if ( in_array($page->_context['section_handle'] , $sections) && $page->_context['page'] == 'index') {
 
 			Administration::instance()->Page->addElementToHead(
-				new XMLElement('script', 'Symphony.Hierarchy='.json_encode($hierarchy[$page->_context['section_handle']]), array(
+				new XMLElement('script', 'Symphony.Hierarchy='.$hierarchy[$page->_context['section_handle']], array(
 					'type' => 'text/javascript'
 				))
 			);
