@@ -15,7 +15,7 @@ jQuery(document).ready(function () {
 			if (!(jQuery(currentKeys).not(supportedKeys).length === 0 && jQuery(supportedKeys).not(currentKeys).length === 0))
 				return;
 
-		} else if (Object.keys(filters).length > 0)
+		} else if (typeof(filters) != 'undefined' && Object.keys(filters).length > 0)
 			return;
 
 		//if parent values are all null do not try to parse as there are no elements to indent
